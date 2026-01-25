@@ -1,0 +1,177 @@
+'use client';
+
+import TestRunner from '@/components/TestRunner';
+import { questions } from '@/data/questions';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+
+function TestPageContent() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const patientId = searchParams.get('patientId');
+
+    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [completed, setCompleted] = useState(false);
+    const [finalScore, setFinalScore] = useState(0);
+    const [finalDuration, setFinalDuration] = useState(0);
+
+    useEffect(() => {
+        console.log('useEffect triggered, patientId:', patientId);
+        if (!patientId) {
+            setError('No patient selected');
+            setLoading(false);
+            return;
+        }
+
+        // Create test session
+        createTestSession();
+    }, []);
+
+    const createTestSession = async () => {
+        try {
+            console.log('Creating test session for patient:', patientId);
+            const res = await fetch('/api/test-sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ patientId }),
+            });
+
+            const data = await res.json();
+            console.log('Test session response:', data);
+
+            if (res.ok) {
+                // Handle both array and object response
+                const session = Array.isArray(data.session) ? data.session[0] : data.session;
+                console.log('Session ID:', session?.id);
+                setSessionId(session?.id || null);
+                setLoading(false);
+            } else {
+                setError(data.error || 'Failed to create test session');
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error('Error creating test session:', err);
+            setError('An error occurred');
+            setLoading(false);
+        }
+    };
+
+    const handleTestComplete = async (totalScore: number, duration: number) => {
+        if (!sessionId) return;
+
+        try {
+            // Update session with final results
+            await fetch(`/api/test-sessions/${encodeURIComponent(sessionId)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ totalScore, duration }),
+            });
+
+            setFinalScore(totalScore);
+            setFinalDuration(duration);
+            setCompleted(true);
+        } catch (error) {
+            console.error('Error completing test:', error);
+        }
+    };
+
+    const handleBackToDashboard = () => {
+        router.push('/dashboard');
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-4xl text-gray-600">
+                    Preparing test...
+                    <div className="text-xl mt-4">Patient: {patientId}</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-8">
+                <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full border-4 border-red-300">
+                    <div className="text-center">
+                        <div className="text-6xl mb-4">⚠️</div>
+                        <h1 className="text-4xl font-bold text-red-600 mb-4">Error</h1>
+                        <p className="text-2xl text-gray-700 mb-8">{error}</p>
+                        <button
+                            onClick={handleBackToDashboard}
+                            className="bg-blue-500 text-white px-8 py-5 text-2xl font-bold rounded-2xl border-4 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95"
+                        >
+                            ← Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (completed) {
+        const maxScore = 30;
+
+        const percentage = Math.round((finalScore / maxScore) * 100);
+
+        return (
+            <div className="min-h-screen flex items-center justify-center p-8">
+                <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-3xl w-full border-4 border-green-300">
+                    <div className="text-center">
+                        <div className="text-8xl mb-6">🎉</div>
+                        <h1 className="text-5xl font-bold text-green-600 mb-8">Test Completed!</h1>
+
+                        <div className="bg-green-50 border-4 border-green-300 rounded-2xl p-8 mb-8">
+                            <div className="grid grid-cols-2 gap-8">
+                                <div>
+                                    <div className="text-2xl text-gray-600 mb-2">Total Score</div>
+                                    <div className="text-6xl font-bold text-green-600">
+                                        {finalScore} / {maxScore}
+                                    </div>
+                                    <div className="text-3xl text-gray-700 mt-2">{percentage}%</div>
+                                </div>
+                                <div>
+                                    <div className="text-2xl text-gray-600 mb-2">Duration</div>
+                                    <div className="text-6xl font-bold text-blue-600">
+                                        {Math.floor(finalDuration / 60)}:{String(finalDuration % 60).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-2xl text-gray-700 mt-2">minutes</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={handleBackToDashboard}
+                            className="bg-blue-500 text-white px-12 py-6 text-3xl font-bold rounded-2xl border-4 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95"
+                        >
+                            ← Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return sessionId ? (
+        <TestRunner
+            questions={questions}
+            sessionId={sessionId}
+            onComplete={handleTestComplete}
+        />
+    ) : null;
+}
+
+export default function TestPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-4xl text-gray-600">Loading...</div>
+            </div>
+        }>
+            <TestPageContent />
+        </Suspense>
+    );
+}
