@@ -70,20 +70,20 @@ export default function HintQuestion({ question, onComplete, currentAnswer }: Hi
         <>
             {/* Hint Instructor Modal */}
             {showHintInstructorModal && question.hintInstructorVideo && (
-                <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-3xl p-8 max-w-6xl max-h-[90vh] overflow-auto relative">
-                        <h2 className="text-4xl font-bold mb-6 text-center text-gray-800">
+                <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-3xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-auto relative">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center text-gray-800">
                             💡 คำแนะนำเกี่ยวกับคำใบ้
                         </h2>
-                        <div className="mb-6 bg-yellow-50 border-4 border-yellow-400 rounded-2xl p-6">
-                            <p className="text-2xl font-bold text-yellow-800 text-center">
+                        <div className="mb-4 md:mb-6 bg-yellow-50 border-2 md:border-4 border-yellow-400 rounded-2xl p-4 md:p-6">
+                            <p className="text-xl md:text-2xl font-bold text-yellow-800 text-center">
                                 ⚠️ การใช้คำใบ้จะลดคะแนนของคุณ
                             </p>
-                            <p className="text-xl text-gray-700 text-center mt-2">
+                            <p className="text-base md:text-xl text-gray-700 text-center mt-2">
                                 ตอบถูกไม่ใช้คำใบ้ = 2 คะแนน | ตอบถูกใช้คำใบ้ = 1 คะแนน
                             </p>
                         </div>
-                        <div className="aspect-video w-full rounded-2xl overflow-hidden">
+                        <div className="aspect-video w-full rounded-2xl overflow-hidden mb-4 md:mb-6">
                             <iframe
                                 src={getVideoEmbedUrl(question.hintInstructorVideo) || ''}
                                 className="w-full h-full"
@@ -93,7 +93,7 @@ export default function HintQuestion({ question, onComplete, currentAnswer }: Hi
                         </div>
                         <button
                             onClick={() => setShowHintInstructorModal(false)}
-                            className="mt-6 w-full px-8 py-6 text-3xl font-bold rounded-2xl bg-blue-500 hover:bg-blue-600 text-white border-4 border-blue-600"
+                            className="mt-2 w-full px-6 py-4 text-xl md:text-3xl font-bold rounded-2xl bg-blue-500 hover:bg-blue-600 text-white border-2 md:border-4 border-blue-600"
                         >
                             เริ่มทำข้อสอบ
                         </button>

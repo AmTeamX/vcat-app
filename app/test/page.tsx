@@ -83,10 +83,20 @@ function TestPageContent() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-4xl text-gray-600">
-                    Preparing test...
-                    <div className="text-xl mt-4">Patient: {patientId}</div>
+            <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-purple-50">
+                <div className="text-center">
+                    <div className="relative inline-block mb-8">
+                        <div className="w-24 h-24 border-8 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 w-24 h-24 border-8 border-transparent border-b-purple-600 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1s' }}></div>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-800 mb-4 animate-pulse">
+                        กำลังเตรียมแบบทดสอบ...
+                    </div>
+                    <div className="mt-6 flex justify-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                        <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    </div>
                 </div>
             </div>
         );
@@ -122,32 +132,13 @@ function TestPageContent() {
                 <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-3xl w-full border-4 border-green-300">
                     <div className="text-center">
                         <div className="text-8xl mb-6">🎉</div>
-                        <h1 className="text-5xl font-bold text-green-600 mb-8">Test Completed!</h1>
-
-                        <div className="bg-green-50 border-4 border-green-300 rounded-2xl p-8 mb-8">
-                            <div className="grid grid-cols-2 gap-8">
-                                <div>
-                                    <div className="text-2xl text-gray-600 mb-2">Total Score</div>
-                                    <div className="text-6xl font-bold text-green-600">
-                                        {finalScore} / {maxScore}
-                                    </div>
-                                    <div className="text-3xl text-gray-700 mt-2">{percentage}%</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl text-gray-600 mb-2">Duration</div>
-                                    <div className="text-6xl font-bold text-blue-600">
-                                        {Math.floor(finalDuration / 60)}:{String(finalDuration % 60).padStart(2, '0')}
-                                    </div>
-                                    <div className="text-2xl text-gray-700 mt-2">minutes</div>
-                                </div>
-                            </div>
-                        </div>
+                        <h1 className="text-5xl font-bold text-green-600 mb-8">ทำแบบทดสอบเสร็จสิ้น</h1>
 
                         <button
                             onClick={handleBackToDashboard}
                             className="bg-blue-500 text-white px-12 py-6 text-3xl font-bold rounded-2xl border-4 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95"
                         >
-                            ← Back to Dashboard
+                            ← กลับไปที่หน้าแรก
                         </button>
                     </div>
                 </div>
@@ -167,8 +158,11 @@ function TestPageContent() {
 export default function TestPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-4xl text-gray-600">Loading...</div>
+            <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-purple-50">
+                <div className="text-center">
+                    <div className="w-24 h-24 border-8 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6"></div>
+                    <div className="text-4xl font-bold text-gray-800 animate-pulse">กำลังโหลด...</div>
+                </div>
             </div>
         }>
             <TestPageContent />

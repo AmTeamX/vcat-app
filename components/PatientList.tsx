@@ -10,6 +10,7 @@ interface Patient {
     age: number;
     gender: string;
     notes: string;
+    medicalConditions: string;
 }
 
 interface PatientListProps {
@@ -120,99 +121,128 @@ export default function PatientList({ search = '' }: PatientListProps) {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
-                <div className="text-4xl text-gray-600">Loading patients...</div>
+                <div className="text-4xl text-gray-600">กำลังโหลด</div>
             </div>
         );
     }
 
     return (
         <div>
-            <div className='flex justify-between items-center mb-4'>
-                <h1 className='text-4xl font-bold text-black '>My Patients</h1>
-                {/* Add Button */}
+            <div className='flex justify-between items-center mb-6'>
+                <div className="mb-8">
+                    <h2 className="text-2xl font-bold text-gray-800">รายชื่อผู้ทดสอบ</h2>
+                </div>
+                {/* Add Button - Moved to right, title removed (handled by parent) */}
                 <button
                     onClick={() => setShowForm(true)}
-                    className="bg-pink-500 text-white px-4 py-2 text-xl font-bold rounded-4xl border-4 border-pink-600 hover:bg-pink-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                    className="bg-pink-500 text-white px-5 py-2.5 text-base font-bold rounded-2xl shadow-pink-200 shadow-lg hover:bg-pink-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                 >
-                    <span><img src="/icons/add-circle-svgrepo-com.svg" className='h-6' />  </span>
-                    <h1 className=''>Add Patient</h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    <span>เพิ่มผู้ทดสอบ</span>
                 </button>
             </div>
 
             {/* Patient Grid */}
             {patients.length === 0 ? (
-                <div className="text-center py-16">
-                    <div className="text-6xl mb-4">👥</div>
-                    <p className="text-3xl text-gray-600">
-                        {search ? 'No patients found' : 'No patients yet. Add your first patient!'}
+                <div className="text-center py-16 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                    <div className="text-6xl mb-4 opacity-50">👥</div>
+                    <p className="text-xl text-gray-500 font-medium">
+                        {search ? 'ไม่พบผู้ทดสอบ' : 'ยังไม่มีผู้ทดสอบในระบบ'}
                     </p>
+                    <button
+                        onClick={() => setShowForm(true)}
+                        className="mt-4 text-pink-500 font-bold hover:underline"
+                    >
+                        + เพิ่มผู้ทดสอบใหม่
+                    </button>
                 </div>
             ) : (
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
                     {patients.map((patient) => (
                         <div
                             key={patient.id}
-                            className="bg-white rounded-3xl shadow-xl p-6 border-4 border-gray-200 hover:border-blue-400 transition-all"
+                            className="bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-100 p-5 transition-all flex flex-col h-full"
                         >
-                            <div className="mb-4">
-                                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                            <div className="mb-4 flex-1">
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 font-bold shrink-0">
+                                        {patient.name.charAt(0)}
+                                    </div>
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setDropdownOpen(dropdownOpen === patient.id ? null : patient.id)}
+                                            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-50 transition-colors"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                            </svg>
+                                        </button>
+
+                                        {dropdownOpen === patient.id && (
+                                            <>
+                                                <div className="fixed inset-0 z-10" onClick={() => setDropdownOpen(null)} />
+                                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-100">
+                                                    <button
+                                                        onClick={() => {
+                                                            setDropdownOpen(null);
+                                                            setEditingPatient(patient);
+                                                        }}
+                                                        className="w-full px-4 py-3 text-sm font-bold text-left hover:bg-yellow-50 text-yellow-700 flex items-center gap-3 transition-colors"
+                                                    >
+                                                        <span>✏️</span> แก้ไขข้อมูล
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setDropdownOpen(null);
+                                                            handleDeletePatient(patient.id);
+                                                        }}
+                                                        className="w-full px-4 py-3 text-sm font-bold text-left hover:bg-red-50 text-red-600 flex items-center gap-3 transition-colors"
+                                                    >
+                                                        <span>🗑️</span> ลบ
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <h3 className="text-lg font-bold text-gray-900 mt-3 mb-1 truncate">
                                     {patient.name}
                                 </h3>
-                                <div className="text-xl text-gray-600 space-y-1">
-                                    <p>👤 {patient.gender}</p>
-                                    <p>🎂 {patient.age} years old</p>
+
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                            {patient.gender}
+                                        </span>
+                                        <span className="text-gray-400">•</span>
+                                        <span>อายุ {patient.age} ปี</span>
+                                    </div>
                                     {patient.notes && (
-                                        <p className="text-lg mt-2 text-gray-500">📝 {patient.notes}</p>
+                                        <p className="text-sm text-gray-500 line-clamp-2 mt-2 leading-relaxed bg-gray-50 p-2 rounded-lg">
+                                            {patient.notes}
+                                        </p>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 mt-4">
+                            <div className="grid grid-cols-2 gap-2 mt-auto pt-4 border-t border-gray-50">
                                 <button
                                     onClick={() => handleStartTest(patient.id)}
-                                    className="flex-1 bg-green-500 text-white px-4 py-4 text-xl font-bold rounded-xl border-4 border-green-600 hover:bg-green-600 transition-all hover:scale-105 active:scale-95"
+                                    className="col-span-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2.5 rounded-xl transition-all active:scale-95 flex flex-col items-center justify-center gap-1 group"
                                 >
-                                    ▶️ Test
+                                    <span className="text-lg bg-white/20 rounded-full w-8 h-8 flex items-center justify-center group-hover:bg-white/30 transition-colors">▶️</span>
+                                    <span className="text-xs font-bold">ทำแบบทดสอบ</span>
                                 </button>
                                 <button
                                     onClick={() => router.push(`/dashboard/patients/${patient.id}/results`)}
-                                    className="flex-1 bg-blue-500 text-white px-4 py-4 text-xl font-bold rounded-xl border-4 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95"
+                                    className="col-span-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2.5 rounded-xl transition-all active:scale-95 flex flex-col items-center justify-center gap-1 group"
                                 >
-                                    📊 Results
+                                    <span className="text-lg bg-white/20 rounded-full w-8 h-8 flex items-center justify-center group-hover:bg-white/30 transition-colors">📊</span>
+                                    <span className="text-xs font-bold">ผลการทดสอบ</span>
                                 </button>
-
-                                {/* Actions Dropdown */}
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setDropdownOpen(dropdownOpen === patient.id ? null : patient.id)}
-                                        className="bg-gray-500 text-white px-4 py-4 text-2xl font-bold rounded-xl border-4 border-gray-600 hover:bg-gray-600 transition-all hover:scale-105 active:scale-95"
-                                    >
-                                        ⋮
-                                    </button>
-
-                                    {dropdownOpen === patient.id && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl border-4 border-gray-300 overflow-hidden z-50">
-                                            <button
-                                                onClick={() => {
-                                                    setDropdownOpen(null);
-                                                    setEditingPatient(patient);
-                                                }}
-                                                className="w-full px-4 py-3 text-lg font-bold text-left hover:bg-yellow-50 transition-colors flex items-center gap-2 text-yellow-700 border-b-2 border-gray-200"
-                                            >
-                                                ✏️ Edit
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setDropdownOpen(null);
-                                                    handleDeletePatient(patient.id);
-                                                }}
-                                                className="w-full px-4 py-3 text-lg font-bold text-left hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
-                                            >
-                                                🗑️ Delete
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                         </div>
                     ))}

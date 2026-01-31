@@ -37,23 +37,23 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-8">
-            <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full border-4 border-blue-300">
-                <div className="text-center mb-8">
-                    <h1 className="text-6xl font-bold text-blue-600 mb-4">VCAT</h1>
-                    <p className="text-3xl text-gray-600">Visual Cognitive Assessment Test</p>
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full border-2 border-blue-300">
+                <div className="text-center mb-6">
+                    <h1 className="text-4xl font-bold text-blue-600 mb-2">VCAT</h1>
+                    <p className="text-xl text-gray-600">Visual Cognitive Assessment Test</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-2xl font-semibold mb-2 text-gray-700">
+                        <label className="block text-lg font-semibold mb-1 text-gray-700">
                             Email
                         </label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-6 py-5 text-2xl border-4 border-gray-300 rounded-2xl focus:border-blue-500 focus:outline-none"
+                            className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
                             placeholder="doctor@vcat.local"
                             required
                             disabled={loading}
@@ -61,14 +61,14 @@ export default function LoginPage() {
                     </div>
 
                     <div>
-                        <label className="block text-2xl font-semibold mb-2 text-gray-700">
+                        <label className="block text-lg font-semibold mb-1 text-gray-700">
                             Password
                         </label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-6 py-5 text-2xl border-4 border-gray-300 rounded-2xl focus:border-blue-500 focus:outline-none"
+                            className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
                             placeholder="Enter your password"
                             required
                             disabled={loading}
@@ -76,7 +76,7 @@ export default function LoginPage() {
                     </div>
 
                     {error && (
-                        <div className="bg-red-100 border-4 border-red-400 text-red-700 px-6 py-4 rounded-2xl text-xl">
+                        <div className="bg-red-100 border-2 border-red-400 text-red-700 px-4 py-3 rounded-xl text-base">
                             ⚠️ {error}
                         </div>
                     )}
@@ -84,15 +84,27 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-500 text-white px-8 py-6 text-3xl font-bold rounded-2xl border-4 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-blue-500 text-white px-6 py-4 text-2xl font-bold rounded-xl border-2 border-blue-600 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? '⏳ Logging in...' : '🔐 Login'}
                     </button>
                 </form>
 
-                <div className="mt-8 text-center text-xl text-gray-500">
+                <div className="mt-6 text-center text-sm text-gray-500">
                     <p>Default credentials:</p>
-                    <p className="font-mono">doctor@vcat.local / admin123</p>
+                    <p className="font-mono text-xs">doctor@vcat.local / admin123</p>
+                </div>
+
+                <div className="mt-4 text-center">
+                    <p className="text-base text-gray-600">
+                        ยังไม่มีบัญชี?{' '}
+                        <button
+                            onClick={() => router.push('/register')}
+                            className="text-blue-600 font-bold hover:underline"
+                        >
+                            ลงทะเบียนที่นี่
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>

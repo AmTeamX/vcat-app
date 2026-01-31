@@ -32,18 +32,65 @@ export async function GET(
             return NextResponse.json({ error: 'Test session not found' }, { status: 404 });
         }
 
-        // Fetch all answers for this session
-        const answers = await db.query(
+        // Fetch all answers for this session ordered by question and time (latest first)
+        const answersResult = await db.query(
             `SELECT * FROM test_answers 
             WHERE session_id = $sqSessionId 
-            ORDER BY question_index ASC`,
+            ORDER BY question_index ASC, answered_at DESC;`,
             { sqSessionId }
         );
 
+        const allAnswers = answersResult[0] || [];
 
-        return NextResponse.json({ answers: answers[0] || [] });
+        // Group by question_index and take only the latest answer for each question
+        const latestAnswersMap = new Map<number, any>();
+
+        if (Array.isArray(allAnswers)) {
+            for (const answer of allAnswers) {
+                // Only add if we haven't seen this question yet (first one is the latest due to DESC order)
+                if (!latestAnswersMap.has(answer.question_index)) {
+                    latestAnswersMap.set(answer.question_index, answer);
+                }
+            }
+        }
+
+        // Convert map to array and sort by question_index
+        const latestAnswers = Array.from(latestAnswersMap.values()).sort(
+            (a, b) => a.question_index - b.question_index
+        );
+
+        return NextResponse.json({ answers: latestAnswers });
     } catch (error) {
         console.error('Error fetching test answers:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+}
+
+// PUT: Update answer score
+export async function PUT(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const doctorId = await getDoctorFromSession(request);
+
+        if (!doctorId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { answerId, score } = await request.json();
+        const db = await getDB();
+
+        // Update answer score
+        const sqAnswerId = new RecordId(answerId.split(':')[0], answerId.split(':')[1]);
+
+        await db.merge(sqAnswerId, {
+            score: score,
+        });
+
+        return NextResponse.json({ success: true, message: 'Score updated' });
+    } catch (error) {
+        console.error('Error updating answer score:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

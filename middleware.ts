@@ -6,8 +6,8 @@ import { NextResponse } from 'next/server';
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Allow public access to login page and API routes
-    if (pathname === '/login' || pathname.startsWith('/api/')) {
+    // Allow public access to login, register pages and API routes
+    if (pathname === '/login' || pathname === '/register' || pathname.startsWith('/api/')) {
         return NextResponse.next();
     }
 

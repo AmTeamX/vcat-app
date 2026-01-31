@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="text-4xl text-gray-600">Loading...</div>
+      <div className="text-4xl text-gray-600">กำลังโหลด...</div>
     </div>
   );
 }

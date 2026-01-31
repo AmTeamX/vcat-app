@@ -62,73 +62,76 @@ export default function ResultsPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="text-4xl text-gray-600">Loading test results...</div>
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-blue-500 mx-auto mb-6"></div>
+                    <div className="text-4xl text-gray-600 animate-pulse">กำลังสรุปผลการทดสอบ...</div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen p-8">
+        <div className="min-h-screen p-4">
             {/* Header */}
-            <div className="max-w-7xl mx-auto mb-8">
-                <div className="bg-white rounded-3xl shadow-xl p-6 border-4 border-blue-300">
-                    <div className="flex justify-between items-center">
+            <div className="max-w-5xl mx-auto mb-4">
+                <div className="bg-white rounded-2xl shadow-xl p-4 border-2 border-blue-300">
+                    <div className="flex justify-between items-center gap-3">
                         <div>
-                            <h1 className="text-5xl font-bold text-blue-600 mb-2">Test Results History</h1>
-                            <p className="text-2xl text-gray-600">View all completed cognitive assessments</p>
+                            <h1 className="text-2xl font-bold text-blue-600 mb-1">Test Results History</h1>
+                            <p className="text-sm text-gray-600">View all completed cognitive assessments</p>
                         </div>
                         <button
                             onClick={() => router.push('/dashboard')}
-                            className="bg-gray-500 text-white px-8 py-5 text-2xl font-bold rounded-2xl border-4 border-gray-600 hover:bg-gray-600 transition-all hover:scale-105 active:scale-95"
+                            className="bg-gray-500 text-white px-4 py-2 text-base font-bold rounded-xl border-2 border-gray-600 hover:bg-gray-600 transition-all hover:scale-105 active:scale-95 shrink-0"
                         >
-                            ← Back to Dashboard
+                            ← Dashboard
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* Results List */}
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
                 {error && (
-                    <div className="bg-red-100 border-4 border-red-300 rounded-3xl p-8 mb-8">
-                        <p className="text-2xl text-red-700">⚠️ {error}</p>
+                    <div className="bg-red-100 border-2 border-red-300 rounded-2xl p-4 mb-4">
+                        <p className="text-base text-red-700">⚠️ {error}</p>
                     </div>
                 )}
 
                 {sessions.length === 0 ? (
-                    <div className="bg-white rounded-3xl shadow-xl p-12 border-4 border-gray-200 text-center">
-                        <div className="text-8xl mb-6">📋</div>
-                        <h2 className="text-4xl font-bold text-gray-700 mb-4">No Test Results Yet</h2>
-                        <p className="text-2xl text-gray-600">Complete a test to see results here</p>
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200 text-center">
+                        <div className="text-5xl mb-4">📋</div>
+                        <h2 className="text-2xl font-bold text-gray-700 mb-2">No Test Results Yet</h2>
+                        <p className="text-base text-gray-600">Complete a test to see results here</p>
                     </div>
                 ) : (
-                    <div className="grid gap-6">
+                    <div className="grid gap-4">
                         {sessions.map((session) => (
                             <div
                                 key={session.id}
                                 onClick={() => router.push(`/dashboard/results/${session.id}`)}
-                                className="bg-white rounded-3xl shadow-xl p-8 border-4 border-gray-200 hover:border-blue-400 transition-all cursor-pointer hover:scale-[1.02]"
+                                className="bg-white rounded-2xl shadow-xl p-4 border-2 border-gray-200 hover:border-blue-400 transition-all cursor-pointer hover:scale-[1.01]"
                             >
-                                <div className="flex justify-between items-center">
-                                    <div className="flex-1">
-                                        <h3 className="text-3xl font-bold text-gray-800 mb-2">
+                                <div className="flex justify-between items-center gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-xl font-bold text-gray-800 mb-1 truncate">
                                             {session.patient_name || 'Unknown Patient'}
                                         </h3>
-                                        <p className="text-xl text-gray-600">
+                                        <p className="text-sm text-gray-600">
                                             📅 {formatDate(session.started_at)}
                                         </p>
-                                        <p className="text-xl text-gray-600">
+                                        <p className="text-sm text-gray-600">
                                             ⏱️ Duration: {formatDuration(session.duration)}
                                         </p>
                                     </div>
-                                    <div className="text-center">
-                                        <div className="text-6xl font-bold text-blue-600 mb-2">
+                                    <div className="text-center shrink-0">
+                                        <div className="text-4xl font-bold text-blue-600 mb-1">
                                             {session.total_score}
                                         </div>
-                                        <p className="text-xl text-gray-600">Total Score</p>
-                                        <div className={`mt-4 px-6 py-3 rounded-2xl text-xl font-bold ${session.status === 'completed'
-                                            ? 'bg-green-100 text-green-700 border-2 border-green-300'
-                                            : 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300'
+                                        <p className="text-xs text-gray-600">Total Score</p>
+                                        <div className={`mt-2 px-3 py-1 rounded-lg text-xs font-bold ${session.status === 'completed'
+                                            ? 'bg-green-100 text-green-700 border border-green-300'
+                                            : 'bg-yellow-100 text-yellow-700 border border-yellow-300'
                                             }`}>
                                             {session.status === 'completed' ? '✓ Completed' : '⏳ In Progress'}
                                         </div>

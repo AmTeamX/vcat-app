@@ -20,6 +20,7 @@ async function seed() {
       REMOVE TABLE IF EXISTS test_sessions;
       REMOVE TABLE IF EXISTS patients;
       REMOVE TABLE IF EXISTS sessions;
+      REMOVE TABLE IF EXISTS registration_codes;
       REMOVE TABLE IF EXISTS doctors;
     `);
 
@@ -46,6 +47,7 @@ async function seed() {
       DEFINE FIELD age ON patients TYPE number;
       DEFINE FIELD gender ON patients TYPE string;
       DEFINE FIELD notes ON patients TYPE string;
+      DEFINE FIELD medical_conditions ON patients TYPE string;
       DEFINE FIELD created_at ON patients TYPE datetime DEFAULT time::now();
     `);
 
@@ -85,6 +87,18 @@ async function seed() {
       DEFINE INDEX session_token_idx ON sessions COLUMNS session_token UNIQUE;
     `);
 
+    // Registration codes table
+    await db.query(`
+      DEFINE TABLE registration_codes SCHEMAFULL
+        PERMISSIONS FULL;
+      DEFINE FIELD code ON registration_codes TYPE string;
+      DEFINE FIELD is_used ON registration_codes TYPE bool DEFAULT false;
+      DEFINE FIELD used_by ON registration_codes TYPE option<record<doctors>>;
+      DEFINE FIELD used_at ON registration_codes TYPE option<datetime>;
+      DEFINE FIELD created_at ON registration_codes TYPE datetime DEFAULT time::now();
+      DEFINE INDEX code_idx ON registration_codes COLUMNS code UNIQUE;
+    `);
+
     console.log('✅ Tables created successfully');
 
     // Create default doctor account
@@ -102,6 +116,27 @@ async function seed() {
     console.log('✅ Default doctor created:');
     console.log('   Email: doctor@vcat.local');
     console.log('   Password: admin123');
+    console.log('');
+
+    // Create registration codes
+    console.log('🔑 Creating registration codes...');
+
+    // Read codes from environment variable, fallback to default codes
+    const defaultCodes = ['DFVCAT'];
+
+    const regCodes = process.env.REGISTRATION_CODES
+      ? process.env.REGISTRATION_CODES.split(',').map(code => code.trim())
+      : defaultCodes;
+
+    for (const code of regCodes) {
+      await db.create('registration_codes', {
+        code: code,
+        is_used: false,
+      });
+    }
+
+    console.log('✅ Registration codes created:');
+    regCodes.forEach(code => console.log(`   - ${code}`));
     console.log('');
     console.log('🎉 Database seeding completed successfully!');
 

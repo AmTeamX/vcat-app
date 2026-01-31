@@ -20,8 +20,8 @@ export async function GET(
         const db = await getDB();
 
         const result: any = await db.query(
-            'SELECT * FROM patients WHERE id = $patientId AND doctor_id = $doctorId',
-            { patientId, doctorId }
+            'SELECT * FROM patients WHERE id = $patientId',
+            { patientId }
         );
 
         if (!result[0] || result[0].length === 0) {
@@ -52,7 +52,7 @@ export async function PUT(
 
         const { id } = await params;
         const patientId = new RecordId(id.split(":")[0], id.split(":")[1]);
-        const { name, age, gender, notes } = await request.json();
+        const { name, age, gender, notes, medicalConditions } = await request.json();
 
         if (!name || !age || !gender) {
             return NextResponse.json(
@@ -82,6 +82,7 @@ export async function PUT(
             age: Number(age),
             gender,
             notes: notes || '',
+            medical_conditions: medicalConditions || '',
         });
 
         return NextResponse.json({ patient }, { status: 200 });

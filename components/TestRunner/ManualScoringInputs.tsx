@@ -21,15 +21,15 @@ export function GridCopyInput({ onSubmit }: GridCopyInputProps) {
 
     return (
         <div className="space-y-4">
-            <p className="text-xl font-semibold">
+            <p className="text-lg md:text-xl font-semibold">
                 Count correctly filled cells (max 6):
             </p>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 md:gap-3">
                 {[0, 1, 2, 3, 4, 5, 6].map((num) => (
                     <button
                         key={num}
                         onClick={() => setCorrectCells(num)}
-                        className={`text-2xl font-bold h-16 rounded-xl border-4 transition-all ${correctCells === num
+                        className={`text-xl md:text-2xl font-bold h-12 md:h-16 rounded-xl border-2 md:border-4 transition-all ${correctCells === num
                             ? 'bg-blue-600 text-white border-blue-700 scale-110'
                             : 'bg-blue-100 text-gray-800 border-blue-400 hover:bg-blue-200'
                             }`}
@@ -40,7 +40,7 @@ export function GridCopyInput({ onSubmit }: GridCopyInputProps) {
             </div>
             <button
                 onClick={handleSubmit}
-                className="w-full bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-4 rounded-xl border-4 border-green-600"
+                className="w-full bg-green-500 hover:bg-green-600 text-white text-xl md:text-2xl font-bold py-3 md:py-4 rounded-xl border-2 md:border-4 border-green-600"
             >
                 ✓ Submit Score
             </button>
@@ -61,30 +61,30 @@ export function CancellationInput({ onSubmit }: CancellationInputProps) {
 
     return (
         <div className="space-y-4">
-            <p className="text-xl font-semibold">
+            <p className="text-lg md:text-xl font-semibold">
                 Count errors (missed targets or wrong selections):
             </p>
             <div className="flex items-center justify-center gap-4 mb-4">
                 <button
                     onClick={() => setErrors(Math.max(0, errors - 1))}
-                    className="bg-red-500 hover:bg-red-600 text-white text-4xl font-bold w-16 h-16 rounded-full border-4 border-red-600"
+                    className="bg-red-500 hover:bg-red-600 text-white text-3xl md:text-4xl font-bold w-12 h-12 md:w-16 md:h-16 rounded-full border-2 md:border-4 border-red-600"
                 >
                     −
                 </button>
-                <div className="bg-gray-100 border-4 border-gray-400 rounded-2xl px-8 py-4 min-w-30 text-center">
-                    <span className="text-5xl font-bold text-gray-800">{errors}</span>
-                    <p className="text-sm text-gray-600">errors</p>
+                <div className="bg-gray-100 border-2 md:border-4 border-gray-400 rounded-xl md:rounded-2xl px-6 py-3 md:px-8 md:py-4 min-w-24 md:min-w-30 text-center">
+                    <span className="text-4xl md:text-5xl font-bold text-gray-800">{errors}</span>
+                    <p className="text-xs md:text-sm text-gray-600">errors</p>
                 </div>
                 <button
                     onClick={() => setErrors(errors + 1)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white text-4xl font-bold w-16 h-16 rounded-full border-4 border-blue-600"
+                    className="bg-blue-500 hover:bg-blue-600 text-white text-3xl md:text-4xl font-bold w-12 h-12 md:w-16 md:h-16 rounded-full border-2 md:border-4 border-blue-600"
                 >
                     +
                 </button>
             </div>
             <button
                 onClick={() => onSubmit(errors)}
-                className="w-full bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-4 rounded-xl border-4 border-green-600"
+                className="w-full bg-green-500 hover:bg-green-600 text-white text-xl md:text-2xl font-bold py-3 md:py-4 rounded-xl border-2 md:border-4 border-green-600"
             >
                 ✓ Submit Score
             </button>

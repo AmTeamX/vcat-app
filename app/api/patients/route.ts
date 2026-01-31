@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { name, age, gender, notes } = await request.json();
+        const { name, age, gender, notes, medicalConditions } = await request.json();
 
         if (!name || !age || !gender) {
             return NextResponse.json(
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
             age: Number(age),
             gender,
             notes: notes || '',
+            medical_conditions: medicalConditions || '',
         });
 
         return NextResponse.json({ patient }, { status: 201 });

@@ -1,5 +1,5 @@
 import { Question } from '@/data/questions';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface GridMatchQuestionProps {
     question: Question;
@@ -15,8 +15,16 @@ export default function GridMatchQuestion({ question, onSubmit, currentAnswer, v
     );
     const [startTime] = useState(Date.now());
     const [elapsedTime, setElapsedTime] = useState(0);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     const targetGrid = question.gridPattern || Array(4).fill(null).map(() => Array(6).fill(false));
+
+    // Auto-scroll to center content
+    useEffect(() => {
+        if (contentRef.current) {
+            contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, []);
 
     // Track elapsed time
     useEffect(() => {
@@ -80,7 +88,7 @@ export default function GridMatchQuestion({ question, onSubmit, currentAnswer, v
         return (
             <div className="relative inline-block">
                 {/* Circle container */}
-                <div className="w-96 h-96 rounded-full border-8 border-gray-800 bg-white flex items-center justify-center overflow-hidden">
+                <div className="w-[80vw] h-[80vw] md:w-96 md:h-96 max-w-87.5 max-h-87.5 rounded-full border-4 md:border-8 border-gray-800 bg-white flex items-center justify-center overflow-hidden">
                     {/* Grid inside circle */}
                     <div className="grid grid-cols-6 gap-0.5 ">
                         {grid.map((row, rowIndex) =>
@@ -89,7 +97,7 @@ export default function GridMatchQuestion({ question, onSubmit, currentAnswer, v
                                     key={`${rowIndex}-${colIndex}`}
                                     onClick={() => !isTarget && handleCellClick(rowIndex, colIndex)}
                                     disabled={isTarget}
-                                    className={`w-15 h-24 border-2 transition-all ${cell
+                                    className={`w-10 h-16 md:w-14 md:h-24 border-2 transition-all ${cell
                                         ? 'bg-black border-black'
                                         : 'bg-white border-gray-400'
                                         } ${!isTarget ? 'hover:scale-110 cursor-pointer active:scale-95' : 'cursor-default'
@@ -104,27 +112,20 @@ export default function GridMatchQuestion({ question, onSubmit, currentAnswer, v
     };
 
     return (
-        <div className="p-8">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 border-4 border-gray-200">
+        <div className="min-h-screen flex items-center justify-center p-6">
+            <div ref={contentRef} className="bg-white rounded-3xl shadow-2xl p-8 border-4 border-gray-200 max-w-7xl w-full">
                 <h2 className="text-4xl font-bold mb-8 text-gray-800 text-center">
                     {question.title}
                 </h2>
 
                 {/* Timer Display */}
-                <div className={`mb-6 text-center p-4 rounded-2xl border-4 ${isOverTime
-                        ? 'bg-red-100 border-red-400'
-                        : elapsedTime > 20
-                            ? 'bg-yellow-100 border-yellow-400'
-                            : 'bg-blue-100 border-blue-400'
+                <div className={`mb-6 text-center p-4 rounded-2xl border-4 ${elapsedTime > 20
+                    ? 'bg-yellow-100 border-yellow-400'
+                    : 'bg-blue-100 border-blue-400'
                     }`}>
                     <div className="text-5xl font-bold mb-2">
                         ⏱️ {elapsedTime}s / 30s
                     </div>
-                    {isOverTime && (
-                        <p className="text-2xl font-bold text-red-600">
-                            ⚠️ เกินเวลา! (0 คะแนน)
-                        </p>
-                    )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-12 mb-8">

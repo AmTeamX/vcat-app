@@ -10,19 +10,15 @@ export default function HelpModal({ videoSrc, onClose }: HelpModalProps) {
     const embedUrl = getVideoEmbedUrl(videoSrc);
 
     return (
-        <div className="fixed inset-0 bg-white/90 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full border-4 border-blue-400">
-                <div className="text-center mb-6">
-                    <div className="text-6xl mb-4">🤟</div>
-                    <h2 className="text-4xl font-bold text-blue-600 mb-2">
-                        Sign Language Help
+        <div className="fixed inset-0 bg-white/90 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full border-2 md:border-4 border-blue-400">
+                <div className="text-center mb-4 md:mb-6">
+                    <h2 className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">
+                        คำอธิบายการทำข้อสอบ
                     </h2>
-                    <p className="text-xl text-gray-600">
-                        Review the instruction again
-                    </p>
                 </div>
 
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-4 border-gray-300 mb-6">
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-2 md:border-4 border-gray-300 mb-4 md:mb-6">
                     {useIframe ? (
                         <iframe
                             src={embedUrl || ''}
@@ -44,9 +40,9 @@ export default function HelpModal({ videoSrc, onClose }: HelpModalProps) {
 
                 <button
                     onClick={onClose}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white px-8 py-6 text-3xl font-bold rounded-2xl border-4 border-blue-600 transition-all hover:scale-105 active:scale-95"
+                    className="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-4 text-xl md:text-2xl font-bold rounded-2xl border-b-4 border-red-700 active:border-b-0 active:translate-y-1 transition-all"
                 >
-                    ✓ Close
+                    ปิด
                 </button>
             </div>
         </div>

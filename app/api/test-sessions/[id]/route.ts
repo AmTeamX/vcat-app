@@ -48,7 +48,7 @@ export async function GET(
     }
 }
 
-// PUT: Complete test session
+// PUT: Update test session (e.g., total_score) or complete test session
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -57,47 +57,51 @@ export async function PUT(
         const doctorId = await getDoctorFromSession(request);
 
         if (!doctorId) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const { id: sessionId } = await params;
-        const { totalScore, duration } = await request.json();
-
+        const body = await request.json();
         const db = await getDB();
 
         const sqSessionId = new RecordId(sessionId.split(':')[0], sessionId.split(':')[1]);
 
-        // Verify session exists and belongs to doctor
-        const sessionResult: any = await db.query(
-            'SELECT * FROM test_sessions WHERE id = $sqSessionId',
-            { sqSessionId, doctorId }
-        );
+        // Check if this is a score update or session completion
+        if (body.total_score !== undefined && body.totalScore === undefined && body.duration === undefined) {
+            // Update session total score only
+            await db.merge(sqSessionId, {
+                total_score: body.total_score,
+            });
 
-
-        if (!sessionResult[0] || sessionResult[0].length === 0) {
-            return NextResponse.json(
-                { error: 'Test session not found' },
-                { status: 404 }
+            return NextResponse.json({ success: true, message: 'Total score updated' });
+        } else if (body.totalScore !== undefined || body.duration !== undefined) {
+            // Complete test session
+            const sessionResult: any = await db.query(
+                'SELECT * FROM test_sessions WHERE id = $sqSessionId',
+                { sqSessionId }
             );
+
+            if (!sessionResult[0] || sessionResult[0].length === 0) {
+                return NextResponse.json(
+                    { error: 'Test session not found' },
+                    { status: 404 }
+                );
+            }
+
+            // Update session
+            const session = await db.merge(sqSessionId, {
+                status: 'completed',
+                total_score: body.totalScore,
+                duration: body.duration,
+                completed_at: new Date(),
+            });
+
+            return NextResponse.json({ session }, { status: 200 });
+        } else {
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
         }
-
-        // Update session
-        const session = await db.merge(sqSessionId, {
-            status: 'completed',
-            total_score: totalScore,
-            duration: duration,
-            completed_at: new Date(),
-        });
-
-        return NextResponse.json({ session }, { status: 200 });
     } catch (error) {
-        console.error('Complete test session error:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+        console.error('Error updating test session:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

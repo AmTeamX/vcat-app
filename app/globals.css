@@ -17,10 +17,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 100%);
   min-height: 100vh;
+  line-height: 1.8;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Better line-height for all text elements */
+p,
+div,
+span,
+label,
+input,
+textarea,
+button {
+  line-height: 1.8 !important;
+}
+
+/* For headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.8 !important;
 }
 
 /* Large touch targets for accessibility */
