@@ -3,6 +3,7 @@
 import { Question } from '@/data/questions';
 import { getVideoEmbedUrl, needsIframeEmbed } from '@/lib/youtube-utils';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 interface TestRunner01Props {
@@ -21,6 +22,7 @@ type ViewState = 'viewing' | 'outro1-video' | 'outro1-image' | 'outro2-video' | 
  * Custom outro: Show video 1 with image, then video 2
  */
 export default function TestRunner01({ question, onNext, onComplete, currentAnswer, viewTimer }: TestRunner01Props) {
+    const router = useRouter();
     const [state, setState] = useState<ViewState>('viewing');
     const [timer, setTimer] = useState<number>(question.duration || 60);
     const [timerActive, setTimerActive] = useState(false);
@@ -134,7 +136,7 @@ export default function TestRunner01({ question, onNext, onComplete, currentAnsw
                         </div>
                     )}
 
-                    <div className="">
+                    <div className="mt-4">
                         {!timerActive ? (
                             <div className="flex items-center justify-center">
                                 <button
@@ -337,8 +339,8 @@ export default function TestRunner01({ question, onNext, onComplete, currentAnsw
 
         const handleSubmitScore = () => {
             if (checkedItems.length === 0) {
-                // No items checked - end entire assessment and return to home
-                onComplete(0, 0);
+                // No items checked - end test and return to dashboard WITHOUT saving to database
+                router.push('/dashboard');
             } else if (checkedItems.length >= 1) {
                 // At least 1 item checked - proceed with score
                 const score = checkedItems.length;
