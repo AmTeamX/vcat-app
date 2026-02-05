@@ -117,10 +117,12 @@ export default function ResultDetailPage() {
         });
     };
 
-    const handleEditScore = (answerId: string, newScore: number) => {
+    const handleEditScore = (answerId: string, newScore: number, maxScore: number) => {
+        // Cap the score at the maximum value
+        const cappedScore = Math.min(Math.max(0, newScore), maxScore);
         setEditedAnswers(prev =>
             prev.map(answer =>
-                answer.id === answerId ? { ...answer, score: newScore } : answer
+                answer.id === answerId ? { ...answer, score: cappedScore } : answer
             )
         );
     };
@@ -376,14 +378,17 @@ export default function ResultDetailPage() {
                                             <td className="border border-gray-400 px-3 py-2 print:text-sm">{item.item}</td>
                                             <td className="border border-gray-400 px-3 py-2 text-center print:text-sm">
                                                 {isEditing && answer && item.maxScore > 0 ? (
-                                                    <input
-                                                        type="number"
-                                                        value={score}
-                                                        onChange={(e) => handleEditScore(answer.id, parseInt(e.target.value) || 0)}
-                                                        className="w-16 text-center border border-orange-400 rounded px-1"
-                                                        min="0"
-                                                        max={item.maxScore}
-                                                    />
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <input
+                                                            type="number"
+                                                            value={score}
+                                                            onChange={(e) => handleEditScore(answer.id, parseInt(e.target.value) || 0, item.maxScore)}
+                                                            className="w-16 text-center border-2 border-orange-400 rounded px-1 py-1 text-lg font-semibold"
+                                                            min="0"
+                                                            max={item.maxScore}
+                                                        />
+                                                        <span className="text-gray-600 font-semibold">/ {item.maxScore}</span>
+                                                    </div>
                                                 ) : (
                                                     <span>{item.maxScore > 0 ? `${score} / ${item.maxScore}` : '-'}</span>
                                                 )}

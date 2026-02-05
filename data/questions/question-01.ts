@@ -5,8 +5,7 @@ export const question: Question = {
     title: '1. Memory (ภาพเหตุการณ์): ดูภาพเหตุการณ์นี้ 1 นาที',
     image: '/questions/question1_scene.webp',
     instructorVideo: 'https://drive.google.com/file/d/1ZPK6nLfWL3A7Df8HKfqIZPdWbzW_12ee/view?usp=drive_link',
-    // TODO: Change duration to 60 seconds
-    duration: 5,
+    duration: 60,
     outroVideos: [
         "https://drive.google.com/file/d/1T-COKlOpkMXWWVRBsDH84pwdKPs9pe-0/view?usp=drive_link",
         "https://drive.google.com/file/d/1OiGdhoYk9Ax-6mqP17uclBX4lizkAHpK/view?usp=drive_link"

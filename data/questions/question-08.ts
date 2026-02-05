@@ -6,7 +6,6 @@ export const question: Question = {
     image: '/questions/question_mark.webp',
     instructorVideo: "https://drive.google.com/file/d/1_TuqhsAaiNs7KzfvJNnlOGiUQmJYWo7l/view?usp=drive_link",
     maxScore: 2,
-    //TODO: change time to 60 seconds
-    duration: 5,
+    duration: 60,
     instruction: "บอกได้ 8 - 10 คํา = 1.คะแนนบอกได้มากกว่า 10 คํา = 2 คะแนน"
 };
