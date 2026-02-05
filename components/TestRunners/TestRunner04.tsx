@@ -56,8 +56,11 @@ export default function TestRunner04({ question, onNext, currentAnswer, viewTime
             <div ref={contentRef} className="w-full max-w-5xl">
                 {/* LEFT PANEL: Question Content */}
                 <div className="bg-white">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-800">
+                    <h2 className="flex justify-between items-center text-2xl md:text-3xl font-bold mb-4 text-gray-800">
                         {question.title}
+                        <span className="bg-red-600 text-white px-2 py-1 rounded-xl inline-block shadow-lg">
+                            ทำลงในกระดาษคำตอบหน้า 1
+                        </span>
                     </h2>
 
                     {question.image && (
@@ -69,6 +72,7 @@ export default function TestRunner04({ question, onNext, currentAnswer, viewTime
                                     fill
                                     className="object-contain"
                                     unoptimized={question.image.startsWith('/')}
+                                    priority
                                 />
                             </div>
                         </div>
@@ -88,9 +92,17 @@ export default function TestRunner04({ question, onNext, currentAnswer, viewTime
                                 </button>
                             </div>
                         ) : viewTimer && viewTimer > 0 ? (
-                            <div className="space-y-4 md:space-y-6">
+                            <div className="space-y-4">
                                 <div className="text-4xl md:text-6xl font-bold text-purple-600 text-center">
                                     ⏱️ {viewTimer}s
+                                </div>
+                                <div className="flex items-center justify-center">
+                                    <button
+                                        onClick={handleStopTimer}
+                                        className="px-6 py-3 md:px-8 md:py-4 text-lg md:text-xl font-bold rounded-xl md:rounded-2xl bg-blue-500 hover:bg-blue-600 text-white transition-all hover:scale-105 active:scale-95 shadow-lg"
+                                    >
+                                        ✅ เสร็จแล้ว - ไปข้อถัดไป
+                                    </button>
                                 </div>
                             </div>
                         ) : (

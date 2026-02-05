@@ -93,6 +93,7 @@ export default function TestRunner05({ question, onNext, currentAnswer }: TestRu
                                         fill
                                         className="object-contain"
                                         unoptimized={option.image.startsWith('/')}
+                                        priority
                                     />
                                 </div>
                                 <div className={`text-xl md:text-2xl font-bold text-center flex items-center justify-center gap-2 ${isSelected ? 'text-white' : 'text-gray-800'

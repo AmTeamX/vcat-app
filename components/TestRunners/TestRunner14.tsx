@@ -154,6 +154,7 @@ export default function TestRunner14({ question, onNext, currentAnswer }: TestRu
                                         fill
                                         className="object-contain"
                                         unoptimized={currentHintImage.startsWith('/')}
+                                        priority
                                     />
                                 </div>
                                 <button

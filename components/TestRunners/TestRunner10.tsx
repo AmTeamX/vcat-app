@@ -50,7 +50,9 @@ export default function TestRunner10({ question, onNext, currentAnswer, viewTime
                 {/* Question Content */}
                 <div className="bg-white mb-4 md:mb-6">
                     <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-800 text-center">
-                        {question.title}
+                        {question.title} <span className="bg-red-600 text-white px-2 py-1 rounded-xl inline-block shadow-lg">
+                            ทำลงในกระดาษคำตอบหน้า 3
+                        </span>
                     </h2>
 
                     {question.image && (

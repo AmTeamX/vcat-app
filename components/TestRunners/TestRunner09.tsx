@@ -1,9 +1,9 @@
 'use client';
 
 import { Question } from '@/data/questions';
-import { getVideoEmbedUrl } from '@/lib/youtube-utils';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import InstructorModal from '../TestRunner/InstructorModal';
 
 interface TestRunner09Props {
     question: Question;
@@ -72,7 +72,9 @@ export default function TestRunner09({ question, onNext, currentAnswer, viewTime
                 <div className="bg-white mb-4 md:mb-8">
                     {currentInstruction &&
                         <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-800 text-center">
-                            {currentInstruction}
+                            {currentInstruction}  <span className="bg-red-600 text-white px-2 py-1 rounded-xl inline-block shadow-lg">
+                                ทำลงในกระดาษคำตอบหน้า 2 {currentStep === 1 ? "(ข้อ ก)" : "(ข้อ ข)"}
+                            </span>
                         </h2>
                     }
 
@@ -85,6 +87,7 @@ export default function TestRunner09({ question, onNext, currentAnswer, viewTime
                                     fill
                                     className="object-contain"
                                     unoptimized={currentImage.startsWith('/')}
+                                    priority
                                 />
                             </div>
                         </div>
@@ -113,30 +116,12 @@ export default function TestRunner09({ question, onNext, currentAnswer, viewTime
 
             {/* Video Modal */}
             {showVideoModal && question.outroinstructorVideoVideos2 && question.outroinstructorVideoVideos2[0] && (
-                <div className="fixed inset-0 bg-white/90  flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border-2 md:border-4 border-blue-400 max-w-2xl w-full">
-                        <div className="text-center mb-4 md:mb-6">
-                            <h2 className="text-2xl md:text-4xl font-bold text-blue-600 mb-2">
-                                วิดีโอคำแนะนำ
-                            </h2>
-                        </div>
-
-                        <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-2 md:border-4 border-gray-300 mb-4 md:mb-6">
-                            <iframe
-                                src={getVideoEmbedUrl(question.outroinstructorVideoVideos2[0]) || ''}
-                                className="w-full h-full"
-                                allow="autoplay; encrypted-media"
-                            />
-                        </div>
-
-                        <button
-                            onClick={handleCloseVideoModal}
-                            className="w-full py-4 px-6 text-xl font-bold rounded-xl md:rounded-2xl bg-red-500 hover:bg-red-600 text-white border-2 md:border-4 border-red-600 transition-all hover:scale-105 active:scale-95 shadow-lg"
-                        >
-                            ปิดและดำเนินการต่อ
-                        </button>
-                    </div>
-                </div>
+                <InstructorModal
+                    videoSrc={question.outroinstructorVideoVideos2[0]}
+                    questionNumber={9}
+                    questionTitle={question.instruction2 || 'ข้อ ข'}
+                    onClose={handleCloseVideoModal}
+                />
             )}
 
             {/* Scoring Modal */}

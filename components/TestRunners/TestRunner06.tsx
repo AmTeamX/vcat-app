@@ -65,6 +65,7 @@ export default function TestRunner06({ question, onNext, currentAnswer, viewTime
                                 style={{ objectFit: "contain" }}
                                 className="object-cover"
                                 unoptimized={question.image.startsWith('/')}
+                                priority
                             />
                         </div>
                     </div>

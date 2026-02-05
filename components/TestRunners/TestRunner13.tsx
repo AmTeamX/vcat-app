@@ -60,6 +60,7 @@ export default function TestRunner13({ question, onNext, currentAnswer }: TestRu
                                 style={{ objectFit: "contain" }}
                                 className="object-contain"
                                 unoptimized={question.image.startsWith('/')}
+                                priority
                             />
                         </div>
                     </div>
@@ -95,6 +96,7 @@ export default function TestRunner13({ question, onNext, currentAnswer }: TestRu
                                         style={{ objectFit: "contain" }}
                                         className="object-cover"
                                         unoptimized={option.image.startsWith('/')}
+                                        priority
                                     />
                                 </div>
                             </button>

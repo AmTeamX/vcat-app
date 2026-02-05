@@ -289,7 +289,7 @@ export default function TestRunner({ questions, sessionId, onComplete }: TestRun
 
         // Map question index to specific TestRunner component
         const testRunners: Record<number, JSX.Element> = {
-            1: <TestRunner01 question={currentQuestion} onNext={handleNext} currentAnswer={currentAnswer?.answer} viewTimer={viewTimer} />,
+            1: <TestRunner01 question={currentQuestion} onNext={handleNext} onComplete={onComplete} currentAnswer={currentAnswer?.answer} viewTimer={viewTimer} />,
             2: <TestRunner02 question={currentQuestion} onNext={handleNext} currentAnswer={currentAnswer?.answer} />,
             3: <TestRunner03 question={currentQuestion} onNext={handleNext} currentAnswer={currentAnswer?.answer} viewTimer={viewTimer} />,
             4: <TestRunner04
@@ -325,6 +325,8 @@ export default function TestRunner({ questions, sessionId, onComplete }: TestRun
             {showInstructor && currentQuestion.instructorVideo && (
                 <InstructorModal
                     videoSrc={currentQuestion.instructorVideo}
+                    questionNumber={currentIndex + 1}
+                    questionTitle={currentQuestion.title}
                     onClose={() => setShowInstructor(false)}
                 />
             )}

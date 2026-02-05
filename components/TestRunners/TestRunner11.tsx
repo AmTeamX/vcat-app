@@ -69,6 +69,7 @@ export default function TestRunner11({ question, onNext, currentAnswer, viewTime
                                     fill
                                     className="object-contain"
                                     unoptimized={question.image.startsWith('/')}
+                                    priority
                                 />
                             </div>
                         </div>

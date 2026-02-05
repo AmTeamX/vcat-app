@@ -230,12 +230,6 @@ export default function PatientResultsPage() {
                                         </div>
 
                                         <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-6 pl-16 sm:pl-0">
-                                            <div className="text-right">
-                                                <div className="text-3xl font-bold text-gray-900 leading-none">
-                                                    {session.total_score}
-                                                </div>
-                                                <p className="text-xs text-gray-500 font-medium mt-1">คะแนนรวม</p>
-                                            </div>
                                             <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-500 transition-all">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />

@@ -158,11 +158,18 @@ export default function TestRunner03({ question, onNext, currentAnswer, viewTime
                             </div>
                         </div>
 
+                        {/* Elapsed Time Display */}
+                        <div className="text-center mb-4">
+                            <p className="text-3xl md:text-4xl font-bold text-purple-600">
+                                ⏱️ {elapsedTime} s
+                            </p>
+                        </div>
+
                         {/* Submit Button */}
                         <div className="text-center">
                             <button
                                 onClick={handleSubmit}
-                                className="px-8 py-4 md:px-12 md:py-6 text-xl md:text-3xl font-bold rounded-xl md:rounded-2xl border-2 md:border-4 bg-green-500 hover:bg-green-600 text-white border-green-600 transition-all hover:scale-105 active:scale-95 shadow-lg"
+                                className="px-6 py-4 text-xl md:text-3xl font-bold rounded-xl md:rounded-2xl border-2 md:border-4 bg-green-500 hover:bg-green-600 text-white border-green-600 transition-all hover:scale-105 active:scale-95 shadow-lg"
                             >
                                 ส่งคำตอบ
                             </button>
