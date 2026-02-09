@@ -6,7 +6,8 @@ import { useState } from 'react';
 export default function RegisterPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -38,7 +39,7 @@ export default function RegisterPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: formData.name,
+                    name: `${formData.firstName} ${formData.lastName}`.trim(),
                     email: formData.email,
                     password: formData.password,
                     registrationCode: formData.registrationCode,
@@ -75,20 +76,37 @@ export default function RegisterPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-lg font-semibold mb-1 text-gray-700">
-                            ชื่อ-นามสกุล
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-                            placeholder="Dr. John Doe"
-                            required
-                            disabled={loading}
-                        />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-lg font-semibold mb-1 text-gray-700">
+                                ชื่อ
+                            </label>
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+                                placeholder="สมชาย"
+                                required
+                                disabled={loading}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-lg font-semibold mb-1 text-gray-700">
+                                นามสกุล
+                            </label>
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+                                placeholder="รักชาติ"
+                                required
+                                disabled={loading}
+                            />
+                        </div>
                     </div>
 
                     <div>

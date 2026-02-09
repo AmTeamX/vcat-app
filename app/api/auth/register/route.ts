@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
 
         const db = await getDB();
 
-        // Check if registration code exists and is not used
+        // Check if registration code exists and has remaining uses
         const codeResult: any = await db.query(
-            'SELECT * FROM registration_codes WHERE code = $code AND is_used = false',
+            'SELECT * FROM registration_codes WHERE code = $code AND current_uses < max_uses',
             { code: registrationCode }
         );
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
         if (!codes || codes.length === 0) {
             return NextResponse.json(
-                { error: 'รหัสลงทะเบียนไม่ถูกต้องหรือถูกใช้งานแล้ว' },
+                { error: 'รหัสลงทะเบียนไม่ถูกต้องหรือถูกใช้งานครบแล้ว' },
                 { status: 400 }
             );
         }
@@ -59,9 +59,9 @@ export async function POST(request: NextRequest) {
 
         const newDoctor = Array.isArray(newDoctorResult) ? newDoctorResult[0] : newDoctorResult;
 
-        // Mark registration code as used
+        // Increment registration code usage count
         await db.query(
-            'UPDATE $codeId SET is_used = true, used_by = $doctorId, used_at = time::now()',
+            'UPDATE $codeId SET current_uses += 1, is_used = (current_uses + 1 >= max_uses), used_by = $doctorId, used_at = time::now()',
             {
                 codeId: registrationCodeRecord.id,
                 doctorId: newDoctor.id,

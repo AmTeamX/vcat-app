@@ -34,8 +34,8 @@ export default function InstructorModal({ videoSrc, questionNumber, questionTitl
     };
 
     return (
-        <div className="fixed inset-0 bg-white/90  flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full border-2 md:border-4 border-purple-400">
+        <div className="fixed inset-0 bg-white/90 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full border-2 md:border-4 border-purple-400 max-h-[90vh] overflow-y-auto">
                 <div className="text-center mb-4 md:mb-6">
                     <h2 className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">
                         คำอธิบายการทำแบบทดสอบ

@@ -25,12 +25,14 @@ export async function GET(
             `SELECT
                 id,
                 patient_id,
+                doctor_id,
                 status,
                 total_score,
                 duration,
                 started_at,
                 completed_at,
-                patient_id.name AS patient_name
+                patient_id.name AS patient_name,
+                doctor_id.name AS doctor_name
             FROM test_sessions
             WHERE id = $sqSessionId;`,
             { sqSessionId }

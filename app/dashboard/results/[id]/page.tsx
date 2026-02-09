@@ -16,6 +16,8 @@ interface TestSession {
     id: string;
     patient_id: string;
     patient_name: string[];
+    doctor_id: string;
+    doctor_name: string;
     status: string;
     total_score: number;
     duration: number;
@@ -430,11 +432,13 @@ export default function ResultDetailPage() {
                     {/* Signature Section */}
                     <div className="mt-8 grid grid-cols-2 gap-8 print:mt-12">
                         <div>
-                            <p className="mb-12 print:text-sm">ผู้ประเมิน: _________________________</p>
+                            <p className="mb-2 print:text-sm">ผู้ประเมิน: <span className="font-semibold">{session.doctor_name}</span></p>
+                            <p className="mb-2 mt-6 print:text-sm">ลายเซ็น: _________________________</p>
                             <p className="print:text-sm">วันที่: _________________________</p>
                         </div>
                         <div>
-                            <p className="mb-12 print:text-sm">ผู้ตรวจสอบ: _________________________</p>
+                            <p className="mb-2 print:text-sm">ผู้ตรวจสอบ: _________________________</p>
+                            <p className="mb-2 mt-6 print:text-sm">ลายเซ็น: _________________________</p>
                             <p className="print:text-sm">วันที่: _________________________</p>
                         </div>
                     </div>

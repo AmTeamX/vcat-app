@@ -2,7 +2,7 @@ import { Question } from "./types";
 
 export const question: Question = {
     type: 'multi-choice',
-    title: 'จากภาพเหตุการณ์ที่คุณได้ดูไปก่อนหน้านี้ มี 3 รูปด้านล่างที่ไม่ปรากฏอยู่ในรูปภาพดังกล่าวจงเลือกรูปทั้ง 3 รูป',
+    title: '5. จากภาพเหตุการณ์ที่คุณได้ดูไปก่อนหน้านี้ มี 3 รูปด้านล่างที่ไม่ปรากฏอยู่ในรูปภาพดังกล่าวจงเลือกรูปทั้ง 3 รูป',
     image: '/questions/question_mark.webp',
     instructorVideo: "https://drive.google.com/file/d/1TGtEVP7BDGd7CiEcHBdVSAA8u131H5tj/view?usp=drive_link",
     options: [

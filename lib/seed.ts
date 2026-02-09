@@ -92,6 +92,8 @@ async function seed() {
       DEFINE TABLE registration_codes SCHEMAFULL
         PERMISSIONS FULL;
       DEFINE FIELD code ON registration_codes TYPE string;
+      DEFINE FIELD max_uses ON registration_codes TYPE number DEFAULT 10;
+      DEFINE FIELD current_uses ON registration_codes TYPE number DEFAULT 0;
       DEFINE FIELD is_used ON registration_codes TYPE bool DEFAULT false;
       DEFINE FIELD used_by ON registration_codes TYPE option<record<doctors>>;
       DEFINE FIELD used_at ON registration_codes TYPE option<datetime>;
@@ -104,7 +106,7 @@ async function seed() {
     // Create default doctor account
     console.log('👨‍⚕️ Creating default doctor account...');
 
-    const defaultPassword = 'admin123';
+    const defaultPassword = 'adminvcat2026ptxmuictteam';
     const passwordHash = await hashPassword(defaultPassword);
 
     await db.create('doctors', {
@@ -131,6 +133,8 @@ async function seed() {
     for (const code of regCodes) {
       await db.create('registration_codes', {
         code: code,
+        max_uses: 10,
+        current_uses: 0,
         is_used: false,
       });
     }
