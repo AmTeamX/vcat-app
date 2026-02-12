@@ -54,7 +54,7 @@ export default function LoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-                            placeholder="doctor@vcat.local"
+                            placeholder="doctor@vcat.com"
                             required
                             disabled={loading}
                         />
@@ -89,11 +89,6 @@ export default function LoginPage() {
                         {loading ? '⏳ Logging in...' : '🔐 Login'}
                     </button>
                 </form>
-
-                <div className="mt-6 text-center text-sm text-gray-500">
-                    <p>Default credentials:</p>
-                    <p className="font-mono text-xs">doctor@vcat.local / admin123</p>
-                </div>
 
                 <div className="mt-4 text-center">
                     <p className="text-base text-gray-600">
