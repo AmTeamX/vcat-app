@@ -1,5 +1,4 @@
 import { getSessionFromCookie } from '@/lib/auth';
-import { getDB } from '@/lib/db';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -11,34 +10,20 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // Check for session cookie
+    // Allow static assets and public files
+    if (pathname.startsWith('/_next') || pathname.startsWith('/public') || pathname.startsWith('/favicon.ico')) {
+        return NextResponse.next();
+    }
+
+    // Check for session cookie (no DB call — Edge Runtime compatible)
+    // Actual session validation is done by API routes (/api/auth/me)
     const sessionToken = getSessionFromCookie(request.headers.get('cookie'));
 
     if (!sessionToken) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    try {
-        // Verify session exists in database
-        const db = await getDB();
-        const result: any = await db.query(
-            'SELECT * FROM sessions WHERE session_token = $session_token',
-            { session_token: sessionToken }
-        );
-
-        const sessions = result[0];
-
-        if (!sessions || sessions.length === 0) {
-            // Invalid session, redirect to login
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-
-        // Session is valid, allow access
-        return NextResponse.next();
-    } catch (error) {
-        console.error('Middleware error:', error);
-        return NextResponse.redirect(new URL('/login', request.url));
-    }
+    return NextResponse.next();
 }
 
 export const config = {

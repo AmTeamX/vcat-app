@@ -106,7 +106,7 @@ async function seed() {
     // Create default doctor account
     console.log('👨‍⚕️ Creating default doctor account...');
 
-    const defaultPassword = 'adminvcat2026ptxmuictteam';
+    const defaultPassword = 'admin123';
     const passwordHash = await hashPassword(defaultPassword);
 
     await db.create('doctors', {
