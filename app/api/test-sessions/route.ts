@@ -1,4 +1,4 @@
-import { getDB } from '@/lib/db';
+import { getDB, createRecord } from '@/lib/db';
 import { getDoctorFromSession } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecordId } from 'surrealdb';
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Create test session
-        const session = await db.create('test_sessions', {
+        const session = await createRecord('test_sessions', {
             patient_id: stringPatientId,
             doctor_id: doctorId,
             status: 'in_progress',

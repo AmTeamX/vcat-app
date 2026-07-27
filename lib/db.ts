@@ -1,4 +1,4 @@
-import { Surreal } from 'surrealdb';
+import { Surreal, Table } from 'surrealdb';
 
 declare global {
   var surreal: Surreal | undefined;
@@ -95,4 +95,10 @@ export async function closeDB() {
     globalThis.surrealLastLogin = 0;
     globalThis.surrealConnectionPromise = undefined;
   }
+}
+
+// Helper: v1.x requires Table() instead of plain string
+export async function createRecord(table: string, data: Record<string, any>) {
+  const client = await getDB();
+  return client.insert(new Table(table), data);
 }

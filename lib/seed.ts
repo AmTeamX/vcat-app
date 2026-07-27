@@ -3,7 +3,7 @@ const require = createRequire(import.meta.url);
 const { loadEnvConfig } = require('@next/env');
 
 import { hashPassword } from './auth';
-import { getDB } from './db';
+import { getDB, createRecord } from './db';
 
 loadEnvConfig(process.cwd());
 
@@ -109,7 +109,7 @@ async function seed() {
     const defaultPassword = 'admin123';
     const passwordHash = await hashPassword(defaultPassword);
 
-    await db.create('doctors', {
+    await createRecord('doctors', {
       name: 'Dr. Admin',
       email: 'doctor@vcat.local',
       password_hash: passwordHash,
@@ -131,7 +131,7 @@ async function seed() {
       : defaultCodes;
 
     for (const code of regCodes) {
-      await db.create('registration_codes', {
+      await createRecord('registration_codes', {
         code: code,
         max_uses: 10,
         current_uses: 0,

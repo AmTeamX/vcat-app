@@ -1,4 +1,4 @@
-import { getDB } from '@/lib/db';
+import { getDB, createRecord } from '@/lib/db';
 import { getDoctorFromSession } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecordId } from 'surrealdb';
@@ -137,7 +137,7 @@ export async function POST(
         }
 
         // Save answer
-        const testAnswer = await db.create('test_answers', {
+        const testAnswer = await createRecord('test_answers', {
             session_id: sessionId,
             question_index: questionIndex,
             question_text: questionText,

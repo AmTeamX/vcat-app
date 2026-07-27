@@ -1,5 +1,5 @@
 import { generateSessionToken, serializeSessionCookie, verifyPassword } from '@/lib/auth';
-import { getDB } from '@/lib/db';
+import { getDB, createRecord } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         // Create session
         const sessionToken = generateSessionToken();
 
-        await db.create('sessions', {
+        await createRecord('sessions', {
             doctor_id: doctor.id,
             session_token: sessionToken,
         });

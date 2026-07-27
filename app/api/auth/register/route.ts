@@ -1,5 +1,5 @@
 import { generateSessionToken, hashPassword, serializeSessionCookie } from '@/lib/auth';
-import { getDB } from '@/lib/db';
+import { getDB, createRecord } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         const passwordHash = await hashPassword(password);
 
         // Create doctor account
-        const newDoctorResult: any = await db.create('doctors', {
+        const newDoctorResult: any = await createRecord('doctors', {
             name,
             email,
             password_hash: passwordHash,
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         // Create session
         const sessionToken = generateSessionToken();
 
-        await db.create('sessions', {
+        await createRecord('sessions', {
             doctor_id: newDoctor.id,
             session_token: sessionToken,
         });

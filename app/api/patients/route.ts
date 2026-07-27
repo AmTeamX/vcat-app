@@ -1,4 +1,4 @@
-import { getDB } from '@/lib/db';
+import { getDB, createRecord } from '@/lib/db';
 import { getDoctorFromSession } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
         const db = await getDB();
 
-        const patient = await db.create('patients', {
+        const patient = await createRecord('patients', {
             doctor_id: doctorId,
             name,
             age: Number(age),
