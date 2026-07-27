@@ -84,9 +84,10 @@ export async function PUT(
         // Update answer score
         const sqAnswerId = new RecordId(answerId.split(':')[0], answerId.split(':')[1]);
 
-        await db.merge(sqAnswerId, {
-            score: score,
-        });
+        await db.query(
+          'UPDATE $sqAnswerId MERGE { score: $score }',
+          { sqAnswerId, score }
+        );
 
         return NextResponse.json({ success: true, message: 'Score updated' });
     } catch (error) {

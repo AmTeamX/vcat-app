@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
             const db = await getDB();
 
             // Delete session from database
-            await db.query('DELETE FROM sessions WHERE token = $session_token', {
+            await db.query('DELETE FROM sessions WHERE session_token = $session_token', {
                 session_token: sessionToken,
             });
         }

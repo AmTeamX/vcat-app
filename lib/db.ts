@@ -97,7 +97,6 @@ export async function closeDB() {
   }
 }
 
-// Helper: v1.x requires Table() instead of plain string
 export async function createRecord(table: string, data: Record<string, any>) {
   const client = await getDB();
   return client.insert(new Table(table), data);

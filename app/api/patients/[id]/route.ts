@@ -77,13 +77,10 @@ export async function PUT(
         }
 
         // Update patient
-        const patient = await db.merge(patientId, {
-            name,
-            age: Number(age),
-            gender,
-            notes: notes || '',
-            medical_conditions: medicalConditions || '',
-        });
+        const patient = await db.query(
+          'UPDATE $patientId MERGE { name: $name, age: $age, gender: $gender, notes: $notes, medical_conditions: $medicalConditions }',
+          { patientId, name, age: Number(age), gender, notes: notes || '', medicalConditions: medicalConditions || '' }
+        );
 
         return NextResponse.json({ patient }, { status: 200 });
     } catch (error) {

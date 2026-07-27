@@ -71,9 +71,10 @@ export async function PUT(
         // Check if this is a score update or session completion
         if (body.total_score !== undefined && body.totalScore === undefined && body.duration === undefined) {
             // Update session total score only
-            await db.merge(sqSessionId, {
-                total_score: body.total_score,
-            });
+            await db.query(
+              'UPDATE $sqSessionId MERGE { total_score: $totalScore }',
+              { sqSessionId, totalScore: body.total_score }
+            );
 
             return NextResponse.json({ success: true, message: 'Total score updated' });
         } else if (body.totalScore !== undefined || body.duration !== undefined) {
@@ -91,12 +92,10 @@ export async function PUT(
             }
 
             // Update session
-            const session = await db.merge(sqSessionId, {
-                status: 'completed',
-                total_score: body.totalScore,
-                duration: body.duration,
-                completed_at: new Date(),
-            });
+            const session = await db.query(
+              'UPDATE $sqSessionId MERGE { status: $status, total_score: $totalScore, duration: $duration, completed_at: $completedAt }',
+              { sqSessionId, status: 'completed', totalScore: body.totalScore, duration: body.duration, completedAt: new Date() }
+            );
 
             return NextResponse.json({ session }, { status: 200 });
         } else {

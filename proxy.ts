@@ -2,7 +2,7 @@ import { getSessionFromCookie } from '@/lib/auth';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Allow public access to login, register pages and API routes
