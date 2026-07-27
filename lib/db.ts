@@ -26,59 +26,59 @@ export async function getDB(): Promise<Surreal> {
 
   // Refresh token every 50 minutes to prevent "The token has expired" error
   const LOGIN_TIMEOUT = 50 * 60 * 1000;
+  // On serverless, WebSocket connections die between invocations.
+  // Force reconnect if last connection was > 60 seconds ago.
+  const SERVERLESS_RECONNECT = 60 * 1000;
   const shouldRelogin = isConnected && (now - lastLogin > LOGIN_TIMEOUT);
+  const shouldReconnect = isConnected && (now - lastLogin > SERVERLESS_RECONNECT);
 
   // If there is an ongoing connection attempt, reuse it
   if (globalThis.surrealConnectionPromise) {
-    if (!shouldRelogin) {
+    if (!shouldRelogin && !shouldReconnect) {
       return globalThis.surrealConnectionPromise;
     }
-    // If relogin needed, we will overwrite the promise below
   }
 
-  if (!isConnected || shouldRelogin) {
+  if (!isConnected || shouldRelogin || shouldReconnect) {
     connectionPromise = (async () => {
       try {
-        if (shouldRelogin) {
+        if (shouldReconnect) {
+          console.log('🔄 Serverless: reconnecting SurrealDB (WebSocket may be stale)...');
+          try { await db.close(); } catch {}
+          db = new Surreal();
+          globalThis.surreal = db;
+          await db.connect(process.env.SURREALDB_URL!);
+        } else if (shouldRelogin) {
           console.log('🔄 Refreshing SurrealDB connection token...');
-        }
-
-        if (!isConnected) {
+        } else {
           await db.connect(process.env.SURREALDB_URL!);
         }
 
-        // Always signin to refresh/ensure token
         await db.signin({
           username: process.env.SURREALDB_USER!,
           password: process.env.SURREALDB_PASS!,
         });
 
-        // Select namespace and database
         await db.use({
           namespace: process.env.SURREALDB_NAMESPACE!,
           database: process.env.SURREALDB_DATABASE!,
         });
 
-        if (process.env.NODE_ENV !== 'production') {
-          globalThis.surrealConnected = true;
-          globalThis.surrealLastLogin = Date.now();
-        }
+        globalThis.surrealConnected = true;
+        globalThis.surrealLastLogin = Date.now();
 
+        console.log('✅ SurrealDB connected successfully');
         return db;
       } catch (error) {
         console.error('❌ SurrealDB connection error:', error);
-        if (process.env.NODE_ENV !== 'production') {
-          globalThis.surrealConnected = false;
-          globalThis.surrealLastLogin = 0;
-          globalThis.surrealConnectionPromise = undefined;
-        }
+        globalThis.surrealConnected = false;
+        globalThis.surrealLastLogin = 0;
+        globalThis.surrealConnectionPromise = undefined;
         throw error;
       }
     })();
 
-    if (process.env.NODE_ENV !== 'production') {
-      globalThis.surrealConnectionPromise = connectionPromise;
-    }
+    globalThis.surrealConnectionPromise = connectionPromise;
   }
 
   if (connectionPromise) {
